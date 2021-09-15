@@ -24,6 +24,11 @@ class Presupuesto {
         this.gastos    = [];
     }
 
+    nuevoGasto(gasto) {
+        this.gastos = [...this.gastos, gasto];
+        console.log(this.gastos);
+    }
+
 }
 
 class UI {
@@ -79,7 +84,7 @@ function preguntarPresupuesto() {
     } 
 
     presupuesto = new Presupuesto(presupuestoUsuario);
-    console.log(presupuesto);
+    // console.log(presupuesto);
 
     ui.insertarPresupuesto(presupuesto);
 
@@ -96,7 +101,7 @@ function agregarGasto(e) {
 
     // Leer los datos del Formulario
     const nombre = document.querySelector('#gasto').value;
-    const cantidad = document.querySelector('#cantidad').value;
+    const cantidad = Number( document.querySelector('#cantidad').value);
 
 
 
@@ -111,5 +116,17 @@ function agregarGasto(e) {
 
     }
 
-    console.log('Agregando Gastos');
+    // Generar un objeto con el gasto
+    // Esto se conoce como Object Literal Enjagemente
+    const gasto = { nombre, cantidad, id: Date.now()};
+
+    // Anade nuevo gasto
+    presupuesto.nuevoGasto(gasto);
+
+    // Mensaje de todo bien
+    ui.imprimirAlertar('Gasto Agregadp correctamente!!');
+
+    // Reiniciar Formulario
+    formulario.reset();
+
 }
