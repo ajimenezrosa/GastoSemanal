@@ -26,7 +26,8 @@ class Presupuesto {
 
     nuevoGasto(gasto) {
         this.gastos = [...this.gastos, gasto];
-        console.log(this.gastos);
+
+
     }
 
 }
@@ -62,7 +63,63 @@ class UI {
            divMensaje.remove();
         },2000)
 
+        
     }
+    
+            agregarGastosListado(gastos) {
+                // console.log(gastos)
+
+                // Iterar sobre los gastos
+
+                this.limpiarHTML(); // Elimina el HTML previo....
+
+                gastos.forEach(gasto => {
+
+                    const {cantidad, nombre , id } = gasto;
+
+                    // Crear un Li
+                    const nuevogasto = document.createElement('li');
+                    nuevogasto.className = 'list-group-item d-flex justify-content-between align-center';
+                    
+                    // en versiones anteriores de javascript se utiliza esto
+                    // nuevogasto.setAttribute('data-id', id);
+
+                    // en neuvas versiones se utiliza esto...
+                    // esta agrega el data-id y le asigna el valor de id
+                    nuevogasto.dataset.id = id;
+
+                    // Agreagar el HTML al gasto
+
+                    nuevogasto.innerHTML = `
+                        ${nombre} <span class="badge badge-primary  badge-pill">${cantidad} </span>
+
+
+                    `;
+
+                    // Boton para borrar el gasto
+                    const btnBorrar = document.createElement('button');
+                    btnBorrar.classList.add('btn', 'btn-danger' , 'borrar-gasto');
+                    btnBorrar.innerHTML = 'Borrar &times';
+                    nuevogasto.appendChild(btnBorrar);
+
+
+                    //Agregar al HTML
+                    gastoListado.appendChild(nuevogasto);
+
+
+
+
+                });
+
+            }
+
+
+            limpiarHTML(){
+                while(gastoListado.firstChild){
+                    gastoListado.removeChild(gastoListado.firstChild);
+                }
+            }
+
 }
 // Instanciar
 const ui = new UI();
@@ -125,6 +182,12 @@ function agregarGasto(e) {
 
     // Mensaje de todo bien
     ui.imprimirAlertar('Gasto Agregadp correctamente!!');
+
+
+    // Implimir los gastos
+    const { gastos } = presupuesto;
+    ui.agregarGastosListado(gastos)
+
 
     // Reiniciar Formulario
     formulario.reset();
