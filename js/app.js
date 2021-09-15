@@ -32,9 +32,17 @@ class Presupuesto {
     }
 
     calcularRestante() {
+
         const gastado = this.gastos.reduce((total, gasto) => total + gasto.cantidad , 0);
         this.restante = this.presupuesto - gastado;
-        console.log(this.restante);
+        // console.log(this.restante);
+    }
+
+    eliminarGasto(id) {
+        this.gastos = this.gastos.filter(gasto => gasto.id !== id);
+        // console.log(this.gastos);
+        this.calcularRestante();
+
     }
 
 }
@@ -73,7 +81,7 @@ class UI {
         
     }
     
-            agregarGastosListado(gastos) {
+    mostrargastos(gastos) {
                 // console.log(gastos)
 
                 // Iterar sobre los gastos
@@ -107,6 +115,9 @@ class UI {
                     const btnBorrar = document.createElement('button');
                     btnBorrar.classList.add('btn', 'btn-danger' , 'borrar-gasto');
                     btnBorrar.innerHTML = 'Borrar &times';
+                    btnBorrar.onclick = () => {
+                        eliminarGasto(id);
+                    }
                     nuevogasto.appendChild(btnBorrar);
 
 
@@ -134,11 +145,27 @@ class UI {
 
     comprobarPresupuesto(presupuestoObj) {
         const { presupuesto , restante} = presupuestoObj;
+
         
+        if ((presupuesto / 4 ) < restante) {
+            // console.log('Ya gastaste el 75%');
+            const restanteDiv = document.querySelector('.restante');
+            restanteDiv.classList.remove('alert-danger', 'alert-success');
+            restanteDiv.classList.add('alert-warning');
+        }
+        // comprobar < 50
+        if ((presupuesto / 2 ) < restante) {
+            // console.log('Ya gastaste el 75%');
+            const restanteDiv = document.querySelector('.restante');
+            restanteDiv.classList.remove('alert-danger', 'alert-warning');
+            restanteDiv.classList.add('alert-success');
+        }
+
+
 
         // comprobar 25&=%
         if ((presupuesto / 4) > restante) {
-            console.log('Ya gastaste el 75%');
+            // console.log('Ya gastaste el 75%');
             const restanteDiv = document.querySelector('.restante');
             restanteDiv.classList.remove('alert-success', 'alert-warning');
             restanteDiv.classList.add('alert-danger');
@@ -146,11 +173,13 @@ class UI {
         //=================================================================
         // comprobar 50%
         if ((presupuesto / 2) > restante) {
-            console.log('Ya gastaste el 50%');
+            // console.log('Ya gastaste el 50%');
             const restanteDiv = document.querySelector('.restante');
             restanteDiv.classList.remove('alert-success');
             restanteDiv.classList.add('alert-warning');
         }
+
+        
         // =================================================================
 
         // si el total es 0 o menor
@@ -230,7 +259,7 @@ function agregarGasto(e) {
 
     // Implimir los gastos
     const { gastos, restante } = presupuesto;
-    ui.agregarGastosListado(gastos)
+    ui.mostrargastos(gastos)
 
 
     ui.actualizarRestante(restante);
@@ -240,5 +269,27 @@ function agregarGasto(e) {
 
     // Reiniciar Formulario
     formulario.reset();
+
+}
+
+function eliminarGasto(id) {
+    // console.log(id);
+
+    presupuesto.eliminarGasto(id);
+    const { gastos, restante } = presupuesto;
+    ui.mostrargastos(gastos)
+
+
+    // ui.comprobarPresupuesto(presupuesto);
+    // ui.actualizarRestante(restante);
+
+    ui.actualizarRestante(restante);
+
+
+    ui.comprobarPresupuesto(presupuesto);
+
+
+
+
 
 }
